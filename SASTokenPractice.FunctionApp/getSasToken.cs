@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
@@ -32,12 +31,10 @@ namespace SASTokenPractice.FunctionApp
             var credentials = storageAccount.Credentials;
             var accountName = credentials.AccountName;
             var accountKey = credentials.ExportBase64EncodedKey();
-
-            // var fullFileName = $"{fileName}{fileExtension}";
-            // var blobName = $"{blobNamePath}/{fullFileName}";
-            var fullFileName = GetFullFileName(imageData.SasAccessType);
-            var blobName = $"";
             
+            var fullFileName = GetFullFileName(imageData.SasAccessType);
+            var blobNamePath = GetBlobNamePath(imageData.SasAccessType);
+            var blobName = $"{blobNamePath}/{fullFileName}";
 
             // Create an instance of the CloudBlobClient
             CloudBlobClient client = storageAccount.CreateCloudBlobClient();
@@ -96,24 +93,31 @@ namespace SASTokenPractice.FunctionApp
 
             return $"{fileName}{fileExtension}";
         }
-        
-        public class ImageData
+
+        private static string GetBlobNamePath(SasAccessType sasAccessType)
         {
-            public SasAccessType SasAccessType { get; set; }
+            var blobNamePath = "";
+            switch (sasAccessType)
+            {
+                case SasAccessType.Design:
+                    blobNamePath = "images";
+                    break;
+                case SasAccessType.Model:
+                    blobNamePath = "models";
+                    break;
+                case SasAccessType.ProfileImage:
+                    blobNamePath =  "profile_images";
+                    break;
+            }
+
+            return blobNamePath;
         }
-        
+
         public enum SasAccessType
         {
             Design, 
             Model, 
             ProfileImage
-        }
-
-        public enum BlobNamePath
-        {
-            images,
-            models,
-            profile_images
         }
     }
 }

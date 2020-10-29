@@ -10,6 +10,7 @@
         <e p="bin/Debug/netcoreapp3.1/bin" t="ExcludeRecursive" />
         <e p="getSasToken.cs" t="Include" />
         <e p="host.json" t="Include" />
+        <e p="ImageData.cs" t="Include" />
         <e p="local.settings.json" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
