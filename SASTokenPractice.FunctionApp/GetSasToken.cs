@@ -19,7 +19,7 @@ namespace SASTokenPractice.FunctionApp
     {
         [FunctionName("GetSasToken")]
         public static async Task<IActionResult> GenerateSasToken(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequest req, ILogger log, ExecutionContext context)
         {
             log.LogInformation("Request for sas token is triggered.");
@@ -93,7 +93,7 @@ namespace SASTokenPractice.FunctionApp
 
             return $"{fileName}{fileExtension}";
         }
-
+        
         private static string GetBlobNamePath(SasAccessType sasAccessType)
         {
             var blobNamePath = "";
@@ -108,6 +108,8 @@ namespace SASTokenPractice.FunctionApp
                 case SasAccessType.ProfileImage:
                     blobNamePath =  "profile_images";
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(sasAccessType), sasAccessType, null);
             }
 
             return blobNamePath;
