@@ -5,7 +5,12 @@
       <e p="packages" t="ExcludeRecursive" />
       <e p="SASTokenPractice.FunctionApp" t="IncludeRecursive">
         <e p=".gitignore" t="Include" />
-        <e p="AccessTokenAttribute.cs" t="Include" />
+        <e p="AccessTokens" t="Include">
+          <e p="AccessTokenProvider.cs" t="Include" />
+          <e p="AccessTokenResult.cs" t="Include" />
+          <e p="AccessTokenStatus.cs" t="Include" />
+          <e p="IAccessTokenProvider.cs" t="Include" />
+        </e>
         <e p="bin/Debug/netcoreapp3.1/bin" t="ExcludeRecursive" />
         <e p="getSasToken.cs" t="Include" />
         <e p="host.json" t="Include" />
@@ -18,7 +23,25 @@
             </e>
           </e>
         </e>
+        <e p="OidcApiAuthorization" t="Include">
+          <e p="Abstractions" t="Include">
+            <e p="IApiAuthorization.cs" t="Include" />
+            <e p="IAuthorizationHeaderBearerTokenExtractor.cs" t="Include" />
+            <e p="IJwtSecurityTokenHandlerWrapper.cs" t="Include" />
+            <e p="IOidcConfigurationManager.cs" t="Include" />
+          </e>
+          <e p="AuthorizationHeaderBearerTokenExtractor.cs" t="Include" />
+          <e p="JwtSecurityTokenHandlerWrapper.cs" t="Include" />
+          <e p="Models" t="Include">
+            <e p="ApiAuthorizationResult.cs" t="Include" />
+            <e p="HealthCheckResult.cs" t="Include" />
+            <e p="OidcApiAuthorizationSettings.cs" t="Include" />
+          </e>
+          <e p="OidcApiAuthorizationService.cs" t="Include" />
+          <e p="OidcConfigurationManager.cs" t="Include" />
+        </e>
         <e p="SASTokenPractice.FunctionApp.csproj" t="IncludeRecursive" />
+        <e p="Startup.cs" t="Include" />
       </e>
       <e p="SASTokenPractice.FunctionApp.sln" t="IncludeFlat" />
     </e>

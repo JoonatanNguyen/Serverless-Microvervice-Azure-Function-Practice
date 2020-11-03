@@ -4,10 +4,13 @@
         <AzureFunctionsVersion>V3</AzureFunctionsVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.1.1" />
         <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0" />
         <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.9" />
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.8.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.8.0" />
         <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.7" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
     </ItemGroup>
     <ItemGroup>
         <None Update="host.json">
@@ -17,5 +20,13 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </None>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Microsoft.Azure.AppService.Middleware.Modules, Version=1.3.4.0, Culture=neutral, PublicKeyToken=19ec1a8ef10b682d">
+        <HintPath>..\..\..\..\..\Library\Application Support\JetBrains\Rider2020.2\azure-functions-coretools\3.0.2996\Microsoft.Azure.AppService.Middleware.Modules.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.IdentityModel.Protocols, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+        <HintPath>..\..\..\..\..\Library\Application Support\JetBrains\Rider2020.2\azure-functions-coretools\3.0.2996\Microsoft.IdentityModel.Protocols.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

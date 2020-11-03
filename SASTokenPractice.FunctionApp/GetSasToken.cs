@@ -12,56 +12,75 @@ using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using SASTokenPractice.FunctionApp.AccessTokens;
+using SASTokenPractice.FunctionApp.OidcApiAuthorization.Abstractions;
+using SASTokenPractice.FunctionApp.OidcApiAuthorization.Models;
 
 namespace SASTokenPractice.FunctionApp
 {
-    public static class GetSasToken
+    public class GetSasToken
     {
+        // private readonly IAccessTokenProvider _tokenProvider;
+        private readonly IApiAuthorization _apiAuthorization;
+        public GetSasToken(IApiAuthorization apiAuthorization)
+        {
+            _apiAuthorization = apiAuthorization;
+        }
+        
         [FunctionName("GetSasToken")]
-        public static async Task<IActionResult> GenerateSasToken(
+        public async Task<IActionResult> GenerateSasToken(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
             HttpRequest req, ILogger log, ExecutionContext context)
         {
-            log.LogInformation("Request for sas token is triggered.");
-            
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            ImageData imageData = JsonConvert.DeserializeObject<ImageData>(requestBody);
+            log.LogWarning($"HTTP trigger function {nameof(GetSasToken)} received a request.");
 
-            CloudStorageAccount storageAccount = GetCloudStorageAccount(context);
-            var credentials = storageAccount.Credentials;
-            var accountName = credentials.AccountName;
-            var accountKey = credentials.ExportBase64EncodedKey();
-            
-            var fullFileName = GetFullFileName(imageData.SasAccessType);
-            var blobNamePath = GetBlobNamePath(imageData.SasAccessType);
-            var blobName = $"{blobNamePath}/{fullFileName}";
-
-            // Create an instance of the CloudBlobClient
-            CloudBlobClient client = storageAccount.CreateCloudBlobClient();
-            
-            // Retrieve an instance of the container using hard-code container name
-            CloudBlobContainer container = client.GetContainerReference("cdn");
-
-            // Create a SAS token that's valid for one hour 
-            BlobSasBuilder sasBuilder = new BlobSasBuilder
+            ApiAuthorizationResult authorizationResult = await _apiAuthorization.AuthorizeAsync(req.Headers);
+            if (authorizationResult.Failed)
             {
-                ExpiresOn = DateTime.UtcNow.AddHours(1),
-                BlobContainerName = container.Name,
-                BlobName = blobName,
-                Resource = "b"
-            };
-            
-            // Specify permission for the SAS
-            sasBuilder.SetPermissions(BlobSasPermissions.Create);
+                log.LogWarning(authorizationResult.FailureReason);
+                return new UnauthorizedResult();
+            }
+            log.LogWarning($"HTTP trigger function {nameof(GetSasToken)} request is authorized.");
 
-            // Use the key to get the SAS token 
-            string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(accountName, accountKey))
-                .ToString();
+            return new OkResult();
+            // string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            // ImageData imageData = JsonConvert.DeserializeObject<ImageData>(requestBody);
+            //
+            // CloudStorageAccount storageAccount = GetCloudStorageAccount(context);
+            // var credentials = storageAccount.Credentials;
+            // var accountName = credentials.AccountName;
+            // var accountKey = credentials.ExportBase64EncodedKey();
+            //
+            // var fullFileName = GetFullFileName(imageData.SasAccessType);
+            // var blobNamePath = GetBlobNamePath(imageData.SasAccessType);
+            // var blobName = $"{blobNamePath}/{fullFileName}";
+            //
+            // // Create an instance of the CloudBlobClient
+            // CloudBlobClient client = storageAccount.CreateCloudBlobClient();
+            //
+            // // Retrieve an instance of the container using hard-code container name
+            // CloudBlobContainer container = client.GetContainerReference("cdn");
+            //
+            // // Create a SAS token that's valid for one hour 
+            // BlobSasBuilder sasBuilder = new BlobSasBuilder
+            // {
+            //     ExpiresOn = DateTime.UtcNow.AddHours(1),
+            //     BlobContainerName = container.Name,
+            //     BlobName = blobName,
+            //     Resource = "b"
+            // };
+            //
+            // // Specify permission for the SAS
+            // sasBuilder.SetPermissions(BlobSasPermissions.Create);
+            //
+            // // Use the key to get the SAS token 
+            // string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential(accountName, accountKey))
+            //     .ToString();
+            //
+            // var sasUri = $"{container.GetBlobReference(blobName).Uri}?{sasToken}";
+            //
+            // return new OkObjectResult(sasUri);
 
-            var sasUri = $"{container.GetBlobReference(blobName).Uri}?{sasToken}";
-
-            return new OkObjectResult(sasUri);
-            
         }
 
         private static CloudStorageAccount GetCloudStorageAccount(ExecutionContext context)
@@ -113,6 +132,12 @@ namespace SASTokenPractice.FunctionApp
             }
 
             return blobNamePath;
+        }
+
+        public bool ValidateToken(HttpRequest request)
+        {
+            
+            return true;
         }
 
         public enum SasAccessType
