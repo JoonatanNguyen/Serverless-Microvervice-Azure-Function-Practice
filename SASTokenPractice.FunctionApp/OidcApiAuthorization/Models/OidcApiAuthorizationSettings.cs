@@ -32,17 +32,7 @@ namespace SASTokenPractice.FunctionApp.OidcApiAuthorization.Models
         /// </remarks>
         public string IssuerUrl {
             get => _issuerUrl;
-            set
-            {
-                if (!string.IsNullOrWhiteSpace(value) && !value.EndsWith("/"))
-                {
-                    _issuerUrl = value + "/";
-                }
-                else
-                {
-                    _issuerUrl = value;
-                }
-            }
+            set => _issuerUrl = value;
         }
     }
 }
