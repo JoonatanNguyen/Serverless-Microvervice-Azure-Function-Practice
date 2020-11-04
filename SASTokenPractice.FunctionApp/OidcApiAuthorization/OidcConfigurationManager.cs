@@ -3,9 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using SASTokenPractice.FunctionApp.OidcApiAuthorization.Abstractions;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using SASTokenPractice.FunctionApp.OidcApiAuthorization.Models;
 
 namespace SASTokenPractice.FunctionApp.OidcApiAuthorization
@@ -34,8 +34,9 @@ namespace SASTokenPractice.FunctionApp.OidcApiAuthorization
             //
             // The configuration is not retrieved from the OpenID Connect provider until the first time
             // the ConfigurationManager.GetConfigurationAsync() is called below.
+            
             _configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                $"{issuerUrl}.well-known/openid-configuration", new OpenIdConnectConfigurationRetriever(),
+                $"{issuerUrl}/.well-known/openid-configuration", new OpenIdConnectConfigurationRetriever(),
                 documentRetriever
             );
         }
@@ -53,7 +54,7 @@ namespace SASTokenPractice.FunctionApp.OidcApiAuthorization
         {
             OpenIdConnectConfiguration configuration = await _configurationManager.GetConfigurationAsync(
                 CancellationToken.None);
-
+        
             return configuration.SigningKeys;
         }
 

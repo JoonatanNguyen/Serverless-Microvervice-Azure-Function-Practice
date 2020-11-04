@@ -5,12 +5,6 @@
       <e p="packages" t="ExcludeRecursive" />
       <e p="SASTokenPractice.FunctionApp" t="IncludeRecursive">
         <e p=".gitignore" t="Include" />
-        <e p="AccessTokens" t="Include">
-          <e p="AccessTokenProvider.cs" t="Include" />
-          <e p="AccessTokenResult.cs" t="Include" />
-          <e p="AccessTokenStatus.cs" t="Include" />
-          <e p="IAccessTokenProvider.cs" t="Include" />
-        </e>
         <e p="bin/Debug/netcoreapp3.1/bin" t="ExcludeRecursive" />
         <e p="getSasToken.cs" t="Include" />
         <e p="host.json" t="Include" />
@@ -39,6 +33,7 @@
           </e>
           <e p="OidcApiAuthorizationService.cs" t="Include" />
           <e p="OidcConfigurationManager.cs" t="Include" />
+          <e p="ServicesConfigurationExtensions.cs" t="Include" />
         </e>
         <e p="SASTokenPractice.FunctionApp.csproj" t="IncludeRecursive" />
         <e p="Startup.cs" t="Include" />
