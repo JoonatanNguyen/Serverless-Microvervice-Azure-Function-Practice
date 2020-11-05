@@ -81,7 +81,7 @@ namespace SASTokenPractice.FunctionApp.OidcApiAuthorization
                         ValidateAudience = true,
                         ValidIssuer = _issuerUrl,
                         ValidateIssuer = true,
-                        ValidateIssuerSigningKey = true,
+                        ValidateIssuerSigningKey = false,
                         ValidateLifetime = true,
                         IssuerSigningKeys = issuerSigningKeys
                     };
